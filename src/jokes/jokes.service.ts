@@ -25,6 +25,13 @@ export class JokesService {
             throw new NotFoundException(`No jokes found${type ? ` for type: ${type}` : ''}`);
         }
 
+        // If only one joke is found, return it directly
+        if (count === 1) {
+            const [singleJoke] = await this.jokeRepository.find(query);
+            return singleJoke;
+        }
+
+        // Select a random joke if more than one is available
         const randomIndex = Math.floor(Math.random() * count);
         const [joke] = await this.jokeRepository.find({
             ...query,
